@@ -1,0 +1,6 @@
+node_modules
+.git
+docs
+graphify-out
+regras.txt
+.DS_Store
