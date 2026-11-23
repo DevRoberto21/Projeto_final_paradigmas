@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bilheteria</title>
+  <link rel="stylesheet" href="/estilos.css">
+</head>
+<body>
+  <header>
+    <h1>Bilheteria</h1>
+    <nav id="eventos" aria-label="Eventos"></nav>
+  </header>
+
+  <p id="aviso" role="status" aria-live="polite"></p>
+
+  <main>
+    <section aria-labelledby="titulo-mapa">
+      <div class="titulo">
+        <h2 id="titulo-mapa">Poltronas</h2>
+        <p id="resumo"></p>
+      </div>
+      <div id="mapa"></div>
+      <ul class="legenda">
+        <li><span class="poltrona livre">01</span> Livre</li>
+        <li><span class="poltrona sua">S</span> Sua</li>
+        <li><span class="poltrona bloqueada">B</span> Bloqueada</li>
+        <li><span class="poltrona vendida">X</span> Vendida</li>
+      </ul>
+    </section>
+
+    <aside aria-labelledby="titulo-carrinho">
+      <div class="titulo">
+        <h2 id="titulo-carrinho">Seu carrinho</h2>
+        <strong id="contador" aria-label="Tempo restante"></strong>
+      </div>
+      <p id="vazio">Escolha uma poltrona no mapa.</p>
+      <form id="pagamento" hidden>
+        <div id="pessoas"></div>
+        <button id="pagar" type="submit">Pagar</button>
+      </form>
+      <section id="comprovante" hidden>
+        <h3>Compra confirmada</h3>
+        <ul id="itens"></ul>
+        <p>Total com taxa: <strong id="total"></strong></p>
+      </section>
+    </aside>
+  </main>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
