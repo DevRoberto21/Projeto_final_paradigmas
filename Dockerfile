@@ -4,6 +4,7 @@ COPY package.json package-lock.json ./
 RUN npm ci
 COPY tsconfig.json ./
 COPY src ./src
+COPY public ./public
 COPY testes ./testes
 EXPOSE 3000
 CMD ["npm", "start"]
