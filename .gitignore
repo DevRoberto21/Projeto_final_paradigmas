@@ -2,3 +2,4 @@ node_modules
 regras.txt
 docs/superpowers/
 graphify-out/
+.DS_Store

@@ -17,6 +17,7 @@ const bilheteria = criarBilheteria({
   limitePagamentoMs: 500,
 });
 
-criarServidor(bilheteria).listen(3000, () => {
+criarServidor(bilheteria).listen(3000, (erro) => {
+  if (erro) throw erro;
   console.log("Bilheteria no ar em http://localhost:3000");
 });

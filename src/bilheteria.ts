@@ -28,7 +28,12 @@ export class Bilheteria {
   }
 
   async reservar(pedido: Pedido): Promise<Comprovante> {
-    if (!pedido || !Array.isArray(pedido.ingressos) || pedido.ingressos.length === 0) {
+    if (
+      !pedido ||
+      !Array.isArray(pedido.ingressos) ||
+      pedido.ingressos.length === 0 ||
+      pedido.ingressos.some((pessoa) => !pessoa)
+    ) {
       throw new DadosInvalidosErro("o pedido deve conter ao menos um ingresso");
     }
     const evento = this.#eventos.find((item) => item.id === pedido.eventoId);
