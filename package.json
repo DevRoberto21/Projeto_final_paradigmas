@@ -7,7 +7,8 @@
     "test": "tsx testes/executar.ts testes/projeto.ts src --legivel",
     "start": "tsx src/main.ts",
     "bench": "tsx src/bench.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:carrinhos": "tsx --test testes-extra/*.test.ts"
   },
   "keywords": [],
   "type": "module",

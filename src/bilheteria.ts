@@ -1,4 +1,4 @@
-import type { Comprovante, ConfigBilheteria, EventoInfo, Pedido } from "./tipos.ts";
+import type { Comprovante, ConfigBilheteria, EventoInfo, Pedido, Pessoa } from "./tipos.ts";
 import { DadosInvalidosErro, NaoEncontradoErro, PagamentoErro } from "./dominio.ts";
 import { calcularTotal, montarIngressos } from "./preco.ts";
 import { direitoAMeia } from "./regras.ts";
@@ -48,6 +48,21 @@ export class Bilheteria {
       await comTempoLimite(this.#pagar(total), this.#limitePagamentoMs);
     } catch {
       evento.liberar(poltronas);
+      throw new PagamentoErro("pagamento recusado ou expirado");
+    }
+
+    return { reservaId: this.#proximoReservaId++, eventoId: evento.id, ingressos, total };
+  }
+
+  async pagarBloqueadas(eventoId: number, pessoas: Pessoa[]): Promise<Comprovante> {
+    const evento = this.#eventos.find((item) => item.id === eventoId);
+    if (!evento) throw new NaoEncontradoErro("evento não encontrado");
+
+    const ingressos = montarIngressos(evento.preco, pessoas, direitoAMeia);
+    const total = calcularTotal(ingressos);
+    try {
+      await comTempoLimite(this.#pagar(total), this.#limitePagamentoMs);
+    } catch {
       throw new PagamentoErro("pagamento recusado ou expirado");
     }
 

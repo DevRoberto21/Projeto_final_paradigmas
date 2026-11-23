@@ -49,6 +49,10 @@ export class Evento {
   get preco(): number { return this.#preco; }
   get capacidade(): number { return this.#capacidade; }
 
+  get ocupadas(): number[] {
+    return [...this.#vendidas].sort((a, b) => a - b);
+  }
+
   reservar(poltronas: number[]): void {
     if (
       poltronas.length === 0 ||
