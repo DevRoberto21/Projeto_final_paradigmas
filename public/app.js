@@ -208,7 +208,7 @@ async function atualizarDados() {
 function tratarErro(erro) {
   if (erro.status === 404 && estado.carrinho) {
     definirCarrinho(null);
-    avisar("Seu carrinho expirou e as poltronas foram liberadas.");
+    avisar("Seu carrinho não está mais ativo. Confira as poltronas no mapa.");
   } else if (erro.status === 409) {
     avisar("Essa poltrona acabou de ser escolhida.");
   } else {
@@ -217,7 +217,7 @@ function tratarErro(erro) {
 }
 
 async function selecionarEvento(eventoId) {
-  if (estado.carrinho) return;
+  if (estado.carrinho || estado.ocupado) return;
   estado.eventoId = eventoId;
   estado.mapa = { vendidas: [], bloqueadas: [] };
   elementos.mapa.replaceChildren();
@@ -234,6 +234,11 @@ async function clicarPoltrona(poltrona) {
   elementos.comprovante.hidden = true;
   avisar("");
   try {
+    const salvo = sessionStorage.getItem(CHAVE_TOKEN);
+    if (!estado.carrinho && salvo) {
+      await restaurarCarrinho(salvo);
+      if (!estado.carrinho && sessionStorage.getItem(CHAVE_TOKEN)) return;
+    }
     const token = estado.carrinho?.token;
     if (estado.carrinho?.poltronas.includes(poltrona)) {
       definirCarrinho(await api(`/carrinhos/${token}/poltronas/${poltrona}`, "DELETE"));
@@ -263,7 +268,7 @@ function mostrarComprovante(comprovante) {
 
 async function pagar(evento) {
   evento.preventDefault();
-  if (!estado.carrinho || estado.pagando) return;
+  if (!estado.carrinho || estado.pagando || estado.ocupado) return;
   const { token, poltronas } = estado.carrinho;
   const ingressos = poltronas.map((poltrona) => {
     const dados = dadosDaPoltrona(poltrona);
@@ -289,7 +294,11 @@ async function pagar(evento) {
       await restaurarCarrinho(token, true);
     } else {
       elementos.pagar.textContent = "Pagar";
-      tratarErro(erro);
+      if (erro.status === 400) avisar(erro.message);
+      else {
+        if (erro.status === 404) definirCarrinho(null);
+        avisar("Não foi possível confirmar o pagamento. Confira as poltronas no mapa.");
+      }
     }
   } finally {
     elementos.pagar.disabled = false;
@@ -309,7 +318,7 @@ async function restaurarCarrinho(token, manterBotao = false) {
   } catch (erro) {
     if (erro.status === 404) {
       definirCarrinho(null);
-      avisar("Seu carrinho expirou e as poltronas foram liberadas.");
+      avisar("Seu carrinho não está mais ativo. Confira as poltronas no mapa.");
     } else {
       avisar("Não foi possível recuperar seu carrinho.");
     }
