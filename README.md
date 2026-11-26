@@ -101,7 +101,7 @@ curl -X POST localhost:3000/reservas -H 'Content-Type: application/json' \
    vezes. Além disso, cada núcleo teria a própria memória, então o `Set` de poltronas de um processo
    não seria visto pelos outros. Seria preciso guardar as poltronas num lugar compartilhado e proteger
    a conferência e a marcação juntas, com uma trava (mutex), uma operação atômica ou uma transação
-   num banco de dados (por exemplo, um `UPDATE` que só marca se a poltrona ainda estiver livre).
+   num banco de dados (por exemplo, um `UPDATE` que só marca se a poltrona ainda estiver disponível).
 
 ### Resultados do bench
 
